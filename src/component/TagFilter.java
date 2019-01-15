@@ -3,6 +3,8 @@ package component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 标签过滤器
@@ -10,14 +12,14 @@ import java.util.List;
 public class TagFilter implements Filter{
 
 	// 标签map
-	private HashMap<String, Boolean> tags;
+	private TreeMap<String, Boolean> tags;
 	
 	public TagFilter() {
-		tags = new HashMap<String, Boolean>();
+		tags = new TreeMap<String, Boolean>();
 	}
 	
-	public TagFilter(HashMap<String, Boolean> map) {
-		tags = map;
+	public TagFilter(Map<String, Boolean> map) {
+		tags = (TreeMap<String, Boolean>) map;
 	}
 	
 	@Override
@@ -43,11 +45,11 @@ public class TagFilter implements Filter{
 		return mList;
 	}
 	
-	public void setTags(HashMap<String, Boolean> tags) {
-		this.tags = tags;
+	public void setTags(Map<String, Boolean> tags) {
+		this.tags = (TreeMap<String, Boolean>) tags;
 	}
 	
-	public HashMap<String, Boolean> getTags() {
+	public TreeMap<String, Boolean> getTags() {
 		return tags;
 	}
 	

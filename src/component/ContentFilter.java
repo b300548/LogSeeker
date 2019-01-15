@@ -40,7 +40,7 @@ public class ContentFilter implements Filter{
 		// 遍历信息列表
 		for (Message message : messages) {
 			// 如果包含关键词
-			if (message.getContent().contains(content)) {
+			if (message.getContent().toUpperCase().contains(content.toUpperCase()) || message.getTag().toUpperCase().contains(content.toUpperCase())) {
 				mList.add(message);
 			}
 		}

@@ -3,6 +3,8 @@ package component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 进程过滤器
@@ -11,7 +13,7 @@ import java.util.List;
 public class PidFilter implements Filter {
 
 	// 进程map
-	private HashMap<String, Boolean> pids;
+	private TreeMap<String, Boolean> pids;
 	// 进程映射关系map  主要用于对应进程号 和 带包名的多选框名字
 	private HashMap<String, String>  pidMappings;
 		
@@ -19,11 +21,11 @@ public class PidFilter implements Filter {
 	 * 构造方法
 	 */
 	public PidFilter() {
-		pids = new HashMap<String, Boolean>();
+		pids = new TreeMap<String, Boolean>();
 		pidMappings = new HashMap<String, String>();
 	}
 	
-	public PidFilter(HashMap<String, Boolean> map) {
+	public PidFilter(TreeMap<String, Boolean> map) {
 		pids = map;
 		pidMappings = new HashMap<String, String>();
 	}
@@ -55,11 +57,11 @@ public class PidFilter implements Filter {
 		return mList;
 	}
 	
-	public void setPids(HashMap<String, Boolean> pids) {
-		this.pids = pids;
+	public void setPids(Map<String, Boolean> pids) {
+		this.pids = (TreeMap<String, Boolean>) pids;
 	}
 	
-	public HashMap<String, Boolean> getPids() {
+	public TreeMap<String, Boolean> getPids() {
 		return pids;
 	}
 	

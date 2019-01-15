@@ -1,17 +1,17 @@
-import java.awt.TrayIcon.MessageType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 import component.Level;
 import component.Message;
@@ -93,9 +93,9 @@ public class LogSeeker {
 				// 序号
 				int index = 1;
 				
-				HashMap<String, Boolean> pidMap= (HashMap<String, Boolean>) filter.getPidFilter().getPids();
+				TreeMap<String, Boolean> pidMap= (TreeMap<String, Boolean>) filter.getPidFilter().getPids();
 				pidMap.clear();
-				HashMap<String, Boolean> tagMap = (HashMap<String, Boolean>) filter.getTagFilter().getTags();
+				TreeMap<String, Boolean> tagMap = (TreeMap<String, Boolean>) filter.getTagFilter().getTags();
 				tagMap.clear();
 				
 				// 遍历信息流
@@ -114,7 +114,11 @@ public class LogSeeker {
 					} catch (ParseException e) {
 						// 加入消息不符合规范
 						e.printStackTrace();
-						dateBuilder.append(scanner.nextLine());
+						try {
+							dateBuilder.append(scanner.nextLine());
+						} catch (NoSuchElementException e2) {
+							continue;
+						}
 						message.setContent(dateBuilder.toString());
 						message.setPid("0");
 						message.setTid(0);
@@ -148,8 +152,16 @@ public class LogSeeker {
 					// 解析消息打印级别
 					message.setLevel(Message.stringToLevel(scanner.next()));
 					
-					// 解析消息标签
-					String tag= scanner.next();
+					String tag = null;
+					try {
+						// 解析消息标签
+						tag= scanner.next();
+					} catch (NoSuchElementException e) {
+						// TODO: handle exception
+						continue;
+					}
+					
+					
 					String[] tags = tag.split(":");
 					try {
 						message.setTag(tags[0]);
@@ -184,7 +196,8 @@ public class LogSeeker {
 			// 解析进程的包名
 			String filePath = file.getParentFile().getAbsolutePath();
 			
-			File file2 = new File(filePath + "\\system.txt");
+			File file2 = new File(filePath + File.separator +"system.txt");
+			System.out.println(file2.getAbsolutePath());
 			BufferedReader input = null;
 			List<String> msgs = new ArrayList<String>();
 			try {
@@ -200,8 +213,14 @@ public class LogSeeker {
 					
 					StringBuilder dateBuilder = new StringBuilder();
 					dateBuilder.append("2018-");
-					dateBuilder.append(scanner2.next() + " ");
-					dateBuilder.append(scanner2.next());
+					try {
+						dateBuilder.append(scanner2.next() + " ");
+						dateBuilder.append(scanner2.next());
+					} catch (NoSuchElementException e) {
+						// TODO: handle exception
+						e.printStackTrace();
+						continue;
+					}
 					Date date = null;
 					try {
 						date = sdFormat.parse(dateBuilder.toString());
@@ -211,15 +230,18 @@ public class LogSeeker {
 						continue;
 						}
 					
-					pid = scanner2.next();
-					if (!pid.equals("526")) {
-						scanner2.nextLine();
+					try {
+						pid = scanner2.next();
+						tid = scanner2.next();
+						level = scanner2.next();
+						
+						tag = scanner2.next();
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
 						continue;
 					}
-					tid = scanner2.next();
-					level = scanner2.next();
 					
-					tag = scanner2.next();
 					
 					content = scanner2.nextLine();
 					if (!content.contains("Start proc")) {

@@ -1,7 +1,6 @@
 import java.awt.BorderLayout;
-import java.awt.Color;import java.awt.Component;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -10,18 +9,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -33,32 +26,18 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.border.Border;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-
-import java.awt.GridLayout;
-import java.awt.Insets;
-
 import javax.swing.JScrollPane;
-import java.awt.Rectangle;
-import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-
 import com.eltima.components.ui.DatePicker;
-
 import component.CheckBoxPanel;
 import component.Level;
 import component.Message;
-
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-
-import java.awt.FlowLayout;
 import java.awt.Font;
 
 public class Main {
@@ -463,6 +442,7 @@ public class Main {
         JPanel filterPanel = new JPanel();
         JLabel filterLabel = new JLabel("内容筛选: ");
         JTextField filterField = new JTextField(35);
+        filterField.setFont(new Font("楷体", Font.PLAIN, 20));
         JButton filterButton = new JButton("搜索");
         // 搜索按钮监听器
         filterButton.addActionListener(new ActionListener() {
@@ -508,7 +488,8 @@ public class Main {
         JScrollPane logScrollPane = new JScrollPane();
 
         table = new JTable() {
-        	@Override
+
+			@Override
         	public boolean isCellEditable(int row, int column) {
         		// TODO Auto-generated method stub
         		return false;
@@ -528,6 +509,7 @@ public class Main {
         model.setDataVector(null, new Object[] {"index","time","pid","tid","level","tag","content"});
         table.setModel(model);
         table.setRowHeight(25);  // 设置表格行高
+        table.setFont(new Font("楷体", Font.PLAIN, 20));
         // 设置表格列宽
         setColumnSize(table, 0, 50, 100, 50);
         setColumnSize(table, 1, 100, 200, 100);
@@ -546,7 +528,7 @@ public class Main {
         contenTextArea.setLineWrap(true);
         contenTextArea.setWrapStyleWord(true);
         contenTextArea.setText("日志内容显示");
-        contenTextArea.setFont(new Font("楷体",Font.BOLD,16));
+        contenTextArea.setFont(new Font("楷体",Font.BOLD,24));
         JScrollPane contentScrollPane = new JScrollPane(contenTextArea);
         rightBottomPane.setRightComponent(contentScrollPane);
  
