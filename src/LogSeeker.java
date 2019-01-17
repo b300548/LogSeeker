@@ -64,6 +64,9 @@ public class LogSeeker {
 	 * 内部类
 	 */
 	class FileParser{
+		// 日期格式
+					SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		
 		/**
 		 * 解析文件
 		 * @param file 要解析的文件
@@ -81,8 +84,6 @@ public class LogSeeker {
 			BufferedReader in;  // 声明字符缓冲流
 			Scanner scanner = null;
 
-			// 日期格式
-			SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 			
 			// 每条信息解析成 Message
 			try {
@@ -146,11 +147,17 @@ public class LogSeeker {
 						filter.getPidFilter().getPidMappings().put(message.getPid(), message.getPid());
 						
 					}
+					try {
+						// 解析消息tid
+						message.setTid(Integer.parseInt(scanner.next()));
+						// 解析消息打印级别
+						message.setLevel(Message.stringToLevel(scanner.next()));
+					} catch (NoSuchElementException e) {
+						// TODO: handle exception
+						continue;
+					}
 					
-					// 解析消息tid
-					message.setTid(Integer.parseInt(scanner.next()));
-					// 解析消息打印级别
-					message.setLevel(Message.stringToLevel(scanner.next()));
+					
 					
 					String tag = null;
 					try {
@@ -195,16 +202,34 @@ public class LogSeeker {
 			
 			// 解析进程的包名
 			String filePath = file.getParentFile().getAbsolutePath();
-			
 			File file2 = new File(filePath + File.separator +"system.txt");
-			System.out.println(file2.getAbsolutePath());
+			if (file2 != null) {
+				parseSystem(file2);
+			}
+			
+			for (int i=1;i<=2;i++) {
+				File file3 = new File(filePath + File.separator +"system.txt." + i);
+				if (file3 != null) {
+					parseSystem(file3);
+				}
+			}
+			
+
+			
+			
+			return messages;
+			
+		}
+		
+		private void parseSystem(File file) {
+			System.out.println(file.getAbsolutePath());
 			BufferedReader input = null;
 			List<String> msgs = new ArrayList<String>();
 			try {
-				input = new BufferedReader(new FileReader(file2));
+				input = new BufferedReader(new FileReader(file));
 				
-				Scanner scanner2 = new Scanner(input);
-				while(scanner2.hasNextLine()) {
+				Scanner scanner = new Scanner(input);
+				while(scanner.hasNextLine()) {
 					String pid;
 					String tid;
 					String level;
@@ -214,8 +239,8 @@ public class LogSeeker {
 					StringBuilder dateBuilder = new StringBuilder();
 					dateBuilder.append("2018-");
 					try {
-						dateBuilder.append(scanner2.next() + " ");
-						dateBuilder.append(scanner2.next());
+						dateBuilder.append(scanner.next() + " ");
+						dateBuilder.append(scanner.next());
 					} catch (NoSuchElementException e) {
 						// TODO: handle exception
 						e.printStackTrace();
@@ -226,16 +251,16 @@ public class LogSeeker {
 						date = sdFormat.parse(dateBuilder.toString());
 					} catch (ParseException e) {
 						e.printStackTrace();
-						scanner2.nextLine();
+						scanner.nextLine();
 						continue;
 						}
 					
 					try {
-						pid = scanner2.next();
-						tid = scanner2.next();
-						level = scanner2.next();
+						pid = scanner.next();
+						tid = scanner.next();
+						level = scanner.next();
 						
-						tag = scanner2.next();
+						tag = scanner.next();
 					} catch (Exception e) {
 						// TODO: handle exception
 						e.printStackTrace();
@@ -243,7 +268,7 @@ public class LogSeeker {
 					}
 					
 					
-					content = scanner2.nextLine();
+					content = scanner.nextLine();
 					if (!content.contains("Start proc")) {
 						continue;
 					}
@@ -254,7 +279,7 @@ public class LogSeeker {
 					
 					}
 				
-				scanner2.close();
+				scanner.close();
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
@@ -288,10 +313,6 @@ public class LogSeeker {
 				System.out.println(packageName + " " + pid);
 				
 			}
-			
-			
-			return messages;
-			
 		}
 	}
 	

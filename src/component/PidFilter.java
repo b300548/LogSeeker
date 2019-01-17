@@ -1,6 +1,7 @@
 package component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class PidFilter implements Filter {
 	 * 构造方法
 	 */
 	public PidFilter() {
-		pids = new TreeMap<String, Boolean>();
+		pids = new TreeMap<String, Boolean>(new MyComparator());
 		pidMappings = new HashMap<String, String>();
 	}
 	
@@ -72,7 +73,27 @@ public class PidFilter implements Filter {
 	public void setPidMappings(HashMap<String, String> pidMappings) {
 		this.pidMappings = pidMappings;
 	}
+	
+	
+	class MyComparator implements Comparator<String>{
 
+		@Override
+		public int compare(String arg0, String arg1) {
+			if (arg0.length() < 6 && arg1.length() < 6) {
+				if(arg0.length() < arg1.length()) {
+					return -1;
+				}else if (arg0.length() > arg1.length()) {
+					return 1;
+				}else {
+					return arg0.compareTo(arg1);
+				}
+			}else {
+				return arg0.compareTo(arg1);
+			}
+			
+		}
+		
+	}
 	
 
 }
